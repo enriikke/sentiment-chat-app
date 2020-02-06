@@ -1,0 +1,28 @@
+{
+  "name": "sentiment-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "next": "^9.2.1",
+    "pusher": "^3.0.0",
+    "pusher-js": "^5.0.3",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "sentiment": "^5.0.2"
+  }
+}
