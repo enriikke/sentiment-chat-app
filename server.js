@@ -7,7 +7,7 @@ const dotenv = require("dotenv").config()
 const Sentiment = require("sentiment")
 
 const dev = process.env.NODE_ENV !== "production"
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 3001
 
 const app = next({ dev })
 const handler = app.getRequestHandler()
@@ -18,7 +18,7 @@ const pusher = new Pusher({
   key: process.env.PUSHER_APP_KEY,
   secret: process.env.PUSHER_APP_SECRET,
   cluster: process.env.PUSHER_APP_CLUSTER,
-  encrypted: true,
+  useTLS: true,
 })
 
 app
@@ -32,6 +32,22 @@ app
 
     server.get("*", (req, res) => {
       return handler(req, res)
+    })
+
+    const chatHistory = { messages: [] }
+
+    server.post("/message", (req, res, next) => {
+      const { user = null, message = "", timestamp = +new Date() } = req.body
+      const sentimentScore = sentiment.analyze(message).score
+
+      const chat = { user, message, timestamp, sentiment: sentimentScore }
+
+      chatHistory.messages.push(chat)
+      pusher.trigger("chat-room", "new-message", { chat })
+    })
+
+    server.post("/messages", (req, res, next) => {
+      res.json({ ...chatHistory, status: "success" })
     })
 
     server.listen(port, err => {
